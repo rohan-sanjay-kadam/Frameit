@@ -1,0 +1,61 @@
+{
+  "$schema": "https://frameit.local/schemas/template/v1.json",
+  "id": "magazine",
+  "name": "Magazine layout",
+  "version": "1.0.0",
+  "style_tags": ["editorial", "modern", "clean", "aesthetic", "urban"],
+  "constraints": {
+    "min_photos": 2,
+    "max_photos": 5,
+    "preferred_orientations": ["portrait", "landscape"],
+    "priority": 72
+  },
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "aspect_ratio": "1:1"
+  },
+  "randomness": {
+    "seed_strategy": "per_render"
+  },
+  "background": {
+    "type": "solid",
+    "color": {
+      "value": { "$pick": ["#FFFFFF", "#F8F8F6", "#111111", "#1A1A1A"], "weights": [0.45, 0.25, 0.20, 0.10] }
+    }
+  },
+  "slot_strategy": {
+    "type": "grid",
+    "gap": { "$rand_int": [4, 8] },
+    "padding": { "$rand_int": [0, 20] }
+  },
+  "slot_defaults": {
+    "frame": { "type": "none" },
+    "transform": { "rotation": 0 },
+    "crop": { "mode": "cover", "focal_point": "auto" }
+  },
+  "decorations": [
+    {
+      "id": "caption_line",
+      "type": "text_label",
+      "probability": 0.45,
+      "content": "",
+      "font": "Caveat-Regular",
+      "size": { "$rand_int": [24, 34] },
+      "color": { "$pick": ["#1A1A1A", "#888888", "#FFFFFF"], "weights": [0.5, 0.3, 0.2] },
+      "position": {
+        "x": { "$rand_int": [40, 80] },
+        "y": { "$rand_int": [1010, 1040] },
+        "width": 900
+      },
+      "transform": { "rotation": 0, "opacity": 0.85 },
+      "z_index": 980
+    }
+  ],
+  "filters": {
+    "global": {
+      "preset": { "$pick": ["high_contrast", "cinematic_teal_orange", "none"], "weights": [0.35, 0.35, 0.30] }
+    }
+  },
+  "grain": { "intensity": 0.015 }
+}

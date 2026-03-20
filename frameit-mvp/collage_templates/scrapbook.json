@@ -1,0 +1,101 @@
+{
+  "$schema": "https://frameit.local/schemas/template/v1.json",
+  "id": "scrapbook",
+  "name": "Scrapbook",
+  "version": "1.0.0",
+  "style_tags": ["vintage", "craft", "warm", "casual", "family"],
+  "constraints": {
+    "min_photos": 2,
+    "max_photos": 7,
+    "preferred_orientations": ["any"],
+    "priority": 75
+  },
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "aspect_ratio": "1:1"
+  },
+  "randomness": {
+    "seed_strategy": "per_render"
+  },
+  "background": {
+    "type": "texture",
+    "color": {
+      "value": { "$pick": ["#F2EBD9", "#EDE0CC", "#E8DDD0"], "weights": [0.5, 0.3, 0.2] },
+      "lightness_jitter": { "$rand_int": [-4, 4] }
+    },
+    "texture": {
+      "asset": "paper_grain_02",
+      "opacity": { "$rand": [0.10, 0.22] },
+      "blend_mode": "multiply"
+    }
+  },
+  "slot_strategy": {
+    "type": "scattered",
+    "safe_zone": { "x": 50, "y": 50, "width": 980, "height": 980 },
+    "overlap_budget": { "$rand": [0.08, 0.22] },
+    "z_order": "random"
+  },
+  "slot_defaults": {
+    "size": {
+      "width": { "$rand_int": [260, 380] },
+      "height": { "$rand_int": [280, 420] }
+    },
+    "frame": {
+      "type": "border",
+      "border_width": { "$rand_int": [6, 14] },
+      "color": { "$pick": ["#FFFFFF", "#FFF8EE", "#FAFAFA", "#F5F0E8"], "weights": [0.4, 0.3, 0.2, 0.1] }
+    },
+    "transform": {
+      "rotation": { "$normal": { "mean": 0, "std": 8 } }
+    },
+    "crop": { "mode": "cover", "focal_point": "center" }
+  },
+  "decorations": [
+    {
+      "id": "tape_top_left",
+      "type": "tape",
+      "asset": { "$pick": ["tape_clear", "tape_washi_floral"], "weights": [0.45, 0.55] },
+      "probability": 0.70,
+      "anchor_strategy": "random_slot_top_edge",
+      "transform": {
+        "rotation": { "$rand": [-12, 12] },
+        "opacity": { "$rand": [0.70, 1.0] }
+      },
+      "z_index": 950
+    },
+    {
+      "id": "tape_accent",
+      "type": "tape",
+      "asset": "tape_clear",
+      "probability": 0.40,
+      "anchor_strategy": "random_slot_top_edge",
+      "transform": {
+        "rotation": { "$rand": [-10, 10] },
+        "opacity": { "$rand": [0.65, 0.90] }
+      },
+      "z_index": 940
+    },
+    {
+      "id": "corner_stamp",
+      "type": "stamp",
+      "asset": "stamp_retro_01",
+      "probability": 0.35,
+      "position": {
+        "x": { "$rand_int": [800, 940] },
+        "y": { "$rand_int": [880, 1000] }
+      },
+      "transform": {
+        "rotation": { "$rand": [-8, 8] },
+        "opacity": { "$rand": [0.45, 0.70] }
+      },
+      "z_index": 960
+    }
+  ],
+  "filters": {
+    "global": {
+      "preset": { "$pick": ["warm_vintage", "faded_film", "none"], "weights": [0.55, 0.25, 0.20] }
+    }
+  },
+  "grain": { "intensity": 0.03 }
+}
