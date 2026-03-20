@@ -1,0 +1,32 @@
+# Frameit MVP — Python dependencies
+# Install: pip install -r requirements.txt
+#
+# Intentionally minimal. No Celery, Redis, S3, or database deps.
+# ML deps (open-clip-torch, transformers) are optional — see CLIP_BACKEND in .env.
+
+# ── Web framework ───────────────────────────────────────────────────────────
+fastapi==0.115.5
+uvicorn[standard]==0.32.1          # ASGI server with websockets + reload support
+python-multipart==0.0.12           # Required for FastAPI file uploads
+
+# ── Image processing ────────────────────────────────────────────────────────
+Pillow==11.0.0
+numpy==2.1.3
+
+# ── ML / analysis ───────────────────────────────────────────────────────────
+scikit-learn==1.5.2                # KMeans for colour palette extraction
+
+# ── Config ──────────────────────────────────────────────────────────────────
+python-dotenv==1.0.1               # Loads .env into os.environ
+
+# ── HTTP (for Spotify API calls) ────────────────────────────────────────────
+# Uses stdlib urllib — no extra dep needed.
+
+# ── Optional: real CLIP backends (uncomment what you need) ──────────────────
+# open-clip-torch==2.26.1          # Recommended: pip install open-clip-torch
+# transformers==4.46.3             # Alternative: pip install transformers torch
+
+# ── Dev / test (not needed in production) ───────────────────────────────────
+# pytest==8.3.3
+# httpx==0.27.2                    # FastAPI async test client
+# pytest-asyncio==0.24.0
