@@ -1,0 +1,58 @@
+{
+  "$schema": "https://frameit.local/schemas/template/v1.json",
+  "id": "film_strip",
+  "name": "Film strip",
+  "version": "1.0.0",
+  "style_tags": ["cinematic", "retro", "dark", "urban"],
+  "constraints": {
+    "min_photos": 3,
+    "max_photos": 5,
+    "preferred_orientations": ["landscape", "square"],
+    "priority": 70
+  },
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "aspect_ratio": "1:1"
+  },
+  "randomness": {
+    "seed_strategy": "per_render"
+  },
+  "background": {
+    "type": "solid",
+    "color": {
+      "value": "#1A1A1A",
+      "lightness_jitter": { "$rand_int": [-4, 4] }
+    }
+  },
+  "slot_strategy": {
+    "type": "horizontal_strip",
+    "strip_y": { "$rand_int": [310, 380] },
+    "strip_height": 340,
+    "gap": { "$rand_int": [8, 14] },
+    "padding_x": 40
+  },
+  "slot_defaults": {
+    "frame": {
+      "type": "filmstrip",
+      "sprocket_size": 18,
+      "border_width": 6,
+      "border_color": "#0A0A0A",
+      "sprocket_color": "#111111"
+    },
+    "transform": {
+      "rotation": { "$normal": { "mean": 0, "std": 1.2 } }
+    },
+    "crop": { "mode": "cover", "focal_point": "center" }
+  },
+  "decorations": [],
+  "filters": {
+    "global": {
+      "preset": {
+        "$pick": ["noir_bw", "cinematic_teal_orange", "high_contrast"],
+        "weights": [0.4, 0.4, 0.2]
+      }
+    }
+  },
+  "grain": { "intensity": 0.04 }
+}

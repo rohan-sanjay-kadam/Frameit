@@ -46,6 +46,7 @@ def create_app() -> FastAPI:
     app.include_router(generate.router, prefix="/api/v1", tags=["generate"])
     app.include_router(download.router, prefix="/api/v1", tags=["download"])
 
+    Path(cfg.output_dir).mkdir(parents=True, exist_ok=True)
     app.mount(
         "/output",
         StaticFiles(directory=cfg.output_dir),

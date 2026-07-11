@@ -68,12 +68,12 @@ class PipelineConfig:
     # Validation
     max_photos:           int   = 10
     min_photos:           int   = 1
-    blur_threshold:       float = 80.0
+    blur_threshold:       float = 0.0
     duplicate_threshold:  float = 0.97
 
     # Analysis
     enable_clip:          bool = True   # False → orientation-only, no ML
-    clip_backend_name:    str  = "fallback"  # "fallback" | "open_clip" | "transformers"
+    clip_backend_name:    str  = "open_clip"  # "fallback" | "open_clip" | "transformers"
 
     # Rendering
     jpeg_quality:         int  = 95
@@ -93,16 +93,44 @@ class PipelineConfig:
 # We load them with importlib so the pipeline doesn't have a hard import-time
 # dependency on optional ML packages (torch, open_clip, etc.).
 
-_HERE = Path(__file__).parent.parent  # project root
+# _HERE = Path(__file__).parent.parent  # project root
 
+# 1. Get the exact folder where pipeline.py lives
+_HERE = Path(__file__).resolve().parent
+
+# 2. Get the project root (one folder up from pipeline/)
+#    This makes sure we are targeting the directory containing 'modules/'
+PROJECT_ROOT = _HERE.parent
+
+# 3. Inject PROJECT_ROOT into sys.path so internal imports resolve
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 def _load_module(cache_key: str, rel_path: str):
-    if cache_key not in sys.modules:
-        full = _HERE / rel_path
-        spec = importlib.util.spec_from_file_location(cache_key, full)
-        mod  = importlib.util.module_from_spec(spec)
-        sys.modules[cache_key] = mod
+    if cache_key in sys.modules:
+        del sys.modules[cache_key]
+
+    # Use PROJECT_ROOT here instead of _HERE so 'modules/...' resolves correctly
+    full = PROJECT_ROOT / rel_path
+    
+    # Quick sanity check so we catch path issues early!
+    if not full.exists():
+        raise FileNotFoundError(f"Could not find the file at expected path: {full}")
+
+    spec = importlib.util.spec_from_file_location(cache_key, full)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Could not load spec for {rel_path}")
+        
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[cache_key] = mod
+    
+    try:
         spec.loader.exec_module(mod)
+    except Exception as e:
+        if cache_key in sys.modules:
+            del sys.modules[cache_key]
+        raise e
+        
     return sys.modules[cache_key]
 
 
@@ -445,24 +473,14 @@ class CollagePipeline:
             try:
                 _, _, FallbackCLIPBackend = _import_analyzer()
                 name = self.config.clip_backend_name
+                mod  = _load_module("_ia", "modules/image_analyzer/image_analyzer.py")
 
                 if name == "open_clip":
-                    from modules.image_analyzer.backends.open_clip_backend import (
-                        OpenCLIPBackend,
-                    )
-                    self._clip_backend = OpenCLIPBackend()
-                    log.info("CLIP backend: open_clip")
-
+                    self._clip_backend = mod.OpenCLIPBackend()
                 elif name == "transformers":
-                    from modules.image_analyzer.backends.transformers_backend import (
-                        TransformersCLIPBackend,
-                    )
-                    self._clip_backend = TransformersCLIPBackend()
-                    log.info("CLIP backend: transformers")
-
+                    self._clip_backend = mod.TransformersCLIPBackend()
                 else:
-                    self._clip_backend = FallbackCLIPBackend()
-                    log.info("CLIP backend: fallback (colour-histogram)")
+                    self._clip_backend = mod.FallbackCLIPBackend()
 
             except Exception as exc:
                 log.warning("Could not load CLIP backend (%s) — using fallback", exc)
@@ -471,7 +489,6 @@ class CollagePipeline:
 
             self._clip_ready = True
         return self._clip_backend
-
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Convenience wrapper — used by tests and CLI tools

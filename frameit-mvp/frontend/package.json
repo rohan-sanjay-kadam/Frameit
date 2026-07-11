@@ -1,0 +1,30 @@
+{
+  "name": "frameit-mvp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-powered Instagram collage generator — frontend",
+  "type": "module",
+  "scripts": {
+    "dev":     "vite",
+    "build":   "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint":    "eslint src --ext ts,tsx --report-unused-disable-directives",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react":            "^18.3.1",
+    "react-dom":        "^18.3.1",
+    "zustand":          "^5.0.1",
+    "react-dropzone":   "^14.3.5"
+  },
+  "devDependencies": {
+    "@types/react":        "^18.3.12",
+    "@types/react-dom":    "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "typescript":           "^5.6.3",
+    "vite":                 "^5.4.10",
+    "eslint":               "^9.14.0",
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
+    "@typescript-eslint/parser":        "^8.14.0"
+  }
+}

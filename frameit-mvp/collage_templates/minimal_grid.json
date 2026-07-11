@@ -1,0 +1,45 @@
+{
+  "$schema": "https://frameit.local/schemas/template/v1.json",
+  "id": "minimal_grid",
+  "name": "Minimal grid",
+  "version": "1.0.0",
+  "style_tags": ["clean", "editorial", "modern", "aesthetic"],
+  "constraints": {
+    "min_photos": 2,
+    "max_photos": 9,
+    "preferred_orientations": ["square", "any"],
+    "priority": 90
+  },
+  "canvas": {
+    "width": 1080,
+    "height": 1080,
+    "aspect_ratio": "1:1"
+  },
+  "randomness": {
+    "seed_strategy": "per_render"
+  },
+  "background": {
+    "type": "solid",
+    "color": {
+      "value": {
+        "$pick": ["#FFFFFF", "#FAFAFA", "#F4F4F0", "#111111"],
+        "weights": [0.4, 0.3, 0.2, 0.1]
+      }
+    }
+  },
+  "slot_strategy": {
+    "type": "grid",
+    "gap": { "$rand_int": [3, 10] },
+    "padding": { "$rand_int": [0, 28] }
+  },
+  "slot_defaults": {
+    "frame": { "type": "none" },
+    "transform": { "rotation": 0 },
+    "crop": { "mode": "cover", "focal_point": "auto" }
+  },
+  "decorations": [],
+  "filters": {
+    "global": { "preset": "none" }
+  },
+  "grain": { "intensity": 0.0 }
+}

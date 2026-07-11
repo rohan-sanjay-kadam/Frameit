@@ -1,0 +1,47 @@
+# --- Python Specific ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*venv/
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- Frontend / Node Specific ---
+node_modules/
+/frontend/node_modules/
+.pnp
+.pnp.js
+dist/
+build/
+.next/
+out/
+.docusaurus/
+.eslintcache
+.stylelintcache
+
+# --- OS Specific ---
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# --- IDE / Editor Specific ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.suo

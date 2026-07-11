@@ -224,7 +224,9 @@ def _build_backend() -> CLIPBackend:
     try:
         return OpenCLIPBackend()
     except (ImportError, Exception):
-        pass
+        print(f"\n[DEBUG] OpenCLIP failed to initialize! Error: {e}")
+        import traceback
+        traceback.print_exc()
     try:
         return TransformersCLIPBackend()
     except (ImportError, Exception):

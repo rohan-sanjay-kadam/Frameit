@@ -143,26 +143,26 @@ def get_access_token(
     return _TOKEN_CACHE.token
 
 
-def fetch_recommendations(
-    token:       str,
-    params:      dict[str, str],
-) -> list[SpotifyTrack]:
+def fetch_recommendations(token: str, params: dict) -> list[SpotifyTrack]:
     """
-    Call GET /recommendations and return parsed SpotifyTrack objects.
-
-    Args:
-        token:  Bearer token from get_access_token().
-        params: Query parameters dict (seed_genres, limit, audio targets, etc.)
-
-    Returns:
-        List of SpotifyTrack.  Empty list on empty response.
-
-    Raises:
-        RuntimeError: Spotify returned a non-200 response.
+    Replaces the deprecated /recommendations endpoint.
+    Uses /search with genre + mood keywords instead.
     """
-    data = _spotify_get("/recommendations", params, token)
-    return [_parse_track(t) for t in data.get("tracks", [])]
+    # Build a search query from seed genres and mood
+    genres  = params.get("seed_genres", "pop").replace(",", " OR ")
+    query   = f"genre:{genres.split(' OR ')[0]}"
+    limit   = params.get("limit", "10")
 
+    search_params = {
+        "q":      query,
+        "type":   "track",
+        "limit":  limit,
+        "market": params.get("market", "US"),
+    }
+
+    data   = _spotify_get("/search", search_params, token)
+    tracks = data.get("tracks", {}).get("items", [])
+    return [_parse_track(t) for t in tracks if t]
 
 def fetch_audio_features(
     token:     str,
